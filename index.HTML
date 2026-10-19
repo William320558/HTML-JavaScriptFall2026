@@ -5,13 +5,34 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <style>
+            body{
+                background-color: slateblue;
+            }
+            a:link{
+                text-decoration: none;
+                color: black;
+            }
+            a:visited{
+                color: black;
+            }
+            a:hover{
+                color: white;
+                text-decoration: underline;
+            }
+            #header2{
+                color:thistle;
+            }
+            
+        </style>
+
         <!-- #header2{
             color:red
         } -->
 
     </head>
     <body style="background-color: royalblue;">
-        <h1 style="font-family: Arial, Helvetica, sans-serif; color: burlywood;">Hello and Welcome to NEIT</h1>
+        <h1 style="font-family: Arial, Helvetica, sans-serif; color: thistle;">Hello and Welcome to NEIT</h1>
         <h2>HTML JavaScript class files and assignments</h2>
         <p>Here is the main page for all classwork and HTML JavaScript Fall 2026 at NEIT</p>
         <hr>
@@ -25,7 +46,7 @@
         </ol>
         <hr>
         <br>
-        <h2>Out of Class\HomeWork Assigments</h2>
+        <h2 id="header2">Out of Class\HomeWork Assigments</h2>
         <ul>
             <li><a href="Week1/Week1-HomeWork.html">Week 1 HomeWork</a></li>
             <li><a href="#">Week 2 HomeWork</a></li>
@@ -39,7 +60,7 @@
             var name = "William";
             var num = 10 + 10;
             console.log(num)
-            alert(name + " Welcome to the page");
+            alert("Welcome to the page " + name);
         </script>
     </body>
 </html>
