@@ -88,14 +88,29 @@
             c. Display the result on in the reloadDisplay by changing it's innerHTML
             d. EXTRA CHALLENGE: Figure out how much ammo to load. This will require some math based on how much ammo has been expended and the maximum amount ammo the weapon can hold
         --------------------------------------------------*/
+ reloadButton.addEventListener(`click`, reload)
+
 
         function reload(event)
         {
            inventory--
-            if(inventory>6)
+           currentAmmo++ 
+           triggerDisplay.innerHTML = `AMMO: ${currentAmmo}`
+
+            if(currentAmmo>5)
             {
-                currentAmmo + 6;
-                inventory - 6;
+                currentAmmo = 5;
+                inventory++ ;
+                reloadDisplay.innerHTML = `INVENTORY: ${inventory}`
+            }
+            
+
+            if(inventory<0)
+            {
+
+                inventory = 0;
+                currentAmmo = currentAmmo
+                
                 
             }
             reloadDisplay.innerHTML = `INVENTORY: ${inventory}`
