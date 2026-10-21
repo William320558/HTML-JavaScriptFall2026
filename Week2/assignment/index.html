@@ -94,7 +94,8 @@
            inventory--
             if(inventory>6)
             {
-                currentAmmo + 6
+                currentAmmo + 6;
+                inventory - 6;
                 
             }
             reloadDisplay.innerHTML = `INVENTORY: ${inventory}`
