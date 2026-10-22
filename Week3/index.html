@@ -96,11 +96,27 @@
         ctx.fillStyle = "yellow";
         ctx.lineWidth = 1.0;
         ctx.beginPath();
-        ctx.arc(600, 300, 100, 45 * (Math.PI/180), 315 * (Math.PI/180));
+        ctx.arc(600, 300, 100,degreesToRadians(45), degreesToRadians(315));
         ctx.lineTo(600, 300);
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
+
+        function degreesToRadians(degrees){
+            let radian = degrees * (Math.PI/180);
+           return radian;
+        }
+
+        function drawCircle(xPos, yPos, radius, startAngle, endAngle){
+         ctx.beginPath();
+         ctx.arc(xPos, yPos, radius, degreesToRadians(startAngle), degreesToRadians(endAngle))
+         ctx.fill();
+         ctx.stroke();
+
+
+        }
+
+        drawCircle(100, 10, 10, 0, 360);
 
         //Hoopla
     </script>
