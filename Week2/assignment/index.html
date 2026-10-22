@@ -58,6 +58,7 @@
         Adds functionality to the button so that when it is clicked it will execute the shoot function
         */
         triggerButton.addEventListener(`click`, shoot)
+        
 
         /*
         When the shoot function is executed by a user/player clicking the trigger button:
@@ -86,6 +87,34 @@
             c. Display the result on in the reloadDisplay by changing it's innerHTML
             d. EXTRA CHALLENGE: Figure out how much ammo to load. This will require some math based on how much ammo has been expended and the maximum amount ammo the weapon can hold
         --------------------------------------------------*/
+reloadButton.addEventListener(`click`, reload)
+
+
+        function reload(event)
+        {
+           inventory--
+           currentAmmo++
+           triggerDisplay.innerHTML = `AMMO: ${currentAmmo}`
+
+            if(currentAmmo>5)
+            {
+                currentAmmo = 5;
+                inventory++ ;
+                reloadDisplay.innerHTML = `INVENTORY: ${inventory}`
+            }
+
+
+            if(inventory<0)
+            {
+
+                inventory = 0;
+                currentAmmo = currentAmmo 
+
+            }
+            reloadDisplay.innerHTML = `INVENTORY: ${inventory}`
+
+        }
+
     </script>
 </body>
 </html>
