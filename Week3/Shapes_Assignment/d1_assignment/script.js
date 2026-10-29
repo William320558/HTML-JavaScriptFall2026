@@ -55,7 +55,7 @@ ctx.fill();
 // ctx.fillRect(canvas.width/2 + 290, canvas.height/3 - -170, -100, -130, 90, 90)
 
 
-ctx.strokeStyle = "red";
+ctx.strokeStyle = "black";
 ctx.lineWidth = 5.0;
 ctx.beginPath(canvas.width/2 + 160, 300);
 ctx.moveTo(canvas.width/2 + 235, 495);
@@ -71,8 +71,7 @@ ctx.lineTo(canvas.width/2 + 205, 555);
 ctx.lineTo(canvas.width/2 + 235, 495);
 ctx.stroke();
 
-ctx.fillStyle = "black"
-// ctx.lineTo(160, 300)
+ctx.fillStyle = "yellow"
 ctx.lineTo(235, 495);
 ctx.lineTo(270, 555);
 
