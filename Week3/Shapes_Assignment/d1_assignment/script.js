@@ -1,19 +1,19 @@
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+
+const ctx = canvas.getContext("2d")
 
 
-ctx.strokeStyle = "pink";
+ctx.strokeStyle = "black";
+ctx.fillStyle = "yellow"
+ctx.fillRect(canvas.width/3 - 80, canvas.height/3 - -135, -100, -100)
         ctx.lineWidth = 5.0;
         ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.lineTo(canvas.width/2 + 15, 275);
-        ctx.lineTo(canvas.width/2 + 15, 325);
-        ctx.lineTo(canvas.width/2 - 15, 325);
-        ctx.lineTo(canvas.width/2 - 15, 275);
-        ctx.lineTo(canvas.width/2 + 15, 275);
+        ctx.moveTo (-315, 300);
+        ctx.lineTo(canvas.width/2 + -315, 300);
+        ctx.lineTo(canvas.width/2 + -215, 300);
+        ctx.lineTo(canvas.width/2 - 215, 403);
+        ctx.lineTo(canvas.width/2 - 315, 403);
+        ctx.lineTo(canvas.width/2 + -315, 300);
         ctx.stroke();
+      
 
-// ctx.fillStyle = "yellow";
-// ctx.lineWidth = 5.0;
-// ctx.fillRect(750, canvas.height/2 - -250, 50, 50);
-// ctx.strokeRect(85,302, 100,100);
