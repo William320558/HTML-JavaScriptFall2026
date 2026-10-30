@@ -5,7 +5,7 @@ Week 4 Lab - Experimneting with canvas animation
 */
 
 //shift + alt + downArrow to copy line down
-
+// lamda function --> ()={}
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -45,7 +45,10 @@ for(var i = 0; i < starCount; i++){
     stars[i] = createStar();
     stars[i].x = Math.random() * canvas.width;
     stars[i].y = Math.random() * canvas.height;
-    stars[i].radius = Math.random() * 25;
+    stars[i].radius = Math.random() * 5;
+    stars[i].color = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`
+    
+    
 }
 
 shipSprite.x = canvas.width/2;
@@ -114,12 +117,19 @@ if(w == true){
 if(s == true){
     shipSprite.y += 1
 };
-//If ship if off the side of screen make it come out the other side
+//If ship is off the side of screen make it come out the other side
 if(shipSprite.x > canvas.width + 25){
     shipSprite.x = -25;
 };
 if(shipSprite.x < -25){
     shipSprite.x = canvas.width + 25;
+
+};
+if(shipSprite.y > canvas.height + 25){
+    shipSprite.y = -25;
+};
+if(shipSprite.y < -25){
+    shipSprite.y = canvas.height + 25;
 
 };
 
@@ -134,10 +144,19 @@ if(startPoint.x > canvas.width - 25 || startPoint.x < 0){
     moveDirection.x *= -1;
     boxColor = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
 };
-
+//Draws background
+ctx.fillStyle = "black";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+//Draws stars
 for(var i = 0; i < stars.length; i ++){
     //draw all the stars
     stars[i].drawCircle();
+    stars[i].y++;
+    if(stars[i].y > canvas.height + stars[i].radius * 2){
+        stars[i].x = Math.random() * canvas.width;
+        stars[i].y = -(Math.random() * canvas.height);
+          
+    }
 }
 
 
