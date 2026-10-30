@@ -105,6 +105,7 @@ function main()
         /*----------INSTRUCTION------------
         increase the score by one
         -----------------------------------*/
+        //  text +1 Not working
     }
 
     for(var i=0; i<pickups.length; i++)
@@ -113,7 +114,15 @@ function main()
         make the avatar "collect" the pickups and increase the score
         -----------------------------------*/
        
-        pickups[i].render();
+        if(pickups[i].overlaps(avatar))
+    {
+        pickups[i].x = 1000;
+        /*----------INSTRUCTION------------
+        increase the score by one
+        -----------------------------------*/
+        //  text +1 Not working
+    }
+    pickups[i].render();
     }
 
     testPickup.render();
@@ -122,6 +131,9 @@ function main()
    /*--------------text----------------*/
    //makes the text center aligned instead of left aligned
    ctx.textAlign = `center`;
+   ctx.font = "64px Arial";
+   ctx.fillText("0", 25, 50);
+   
 
     /*----------INSTRUCTION------------
     Set the context's font property to use 64px Arial 
@@ -130,6 +142,10 @@ function main()
     W3schools.com and your book can help
     -----------------------------------*/
 }
+
+// function text(){
+//    ctx.fillText("0", 25, 50);
+// } Not working
 
 //random number generator
 function rand(_low, _high)
