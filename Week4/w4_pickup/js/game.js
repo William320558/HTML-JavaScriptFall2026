@@ -106,7 +106,7 @@ function main()
         /*----------INSTRUCTION------------
         increase the score by one
         -----------------------------------*/
-        //  text +1 Not working
+       score += 1
     }
 
     for(var i=0; i<pickups.length; i++)
