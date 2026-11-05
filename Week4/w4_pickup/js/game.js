@@ -14,6 +14,7 @@ var timer = setInterval(main, fps)
 Create variable calledd score to store amount of "pickups" collected
 ---------------------------------------*/
 var score = 0;
+
 /*--------------avatar------------
 avatar is the "player controllable" Object
 -----------------------------------*/
@@ -106,6 +107,7 @@ function main()
         increase the score by one
         -----------------------------------*/
         score += 1
+
     }
 
     for(var i=0; i<pickups.length; i++)
@@ -139,13 +141,11 @@ function main()
     Set the context's font property to use 64px Arial 
     Draw the score on the canvas using the fillText() method
     HINT: You will have to research how this works 
-    W3schools.com and your book can help
+    W3schools.com and your book can help.
     -----------------------------------*/
 }
 
-// function text(){
-//    ctx.fillText("0", 25, 50);
-// } Not working
+
 
 //random number generator
 function rand(_low, _high)

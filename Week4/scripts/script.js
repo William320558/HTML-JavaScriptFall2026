@@ -10,7 +10,7 @@ Week 4 Lab - Experimneting with canvas animation
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-var fps = 1000/500;
+var fps = 1000/50;
 var timer = setInterval(game, fps);
 
 var startPoint = {x:canvas.width/2, y:canvas.height/2};//canvas.width/2;
@@ -19,6 +19,11 @@ var moveDirection = {x:1,y:1};
 
 var boxColor = "green";
 var shipSprite = {image:document.getElementById("ship"),x:1,y:1,moveX:0,moveY:0 };
+
+var acceleration = 0.3;
+var friction = 0.9;
+
+var score = 0;
 
 
 function createStar(){
@@ -103,58 +108,109 @@ ctx.clearRect(0, 0, canvas.width, canvas.height);
 startPoint.x -= moveDirection.x;
 startPoint.y += moveDirection.y;
 
+var hitBox = shipSprite.x < startPoint.x + 25 &&
+             shipSprite.x + 25 > startPoint.x &&
+             shipSprite.y < startPoint.y + 25 &&
+             shipSprite.y + 25 > startPoint.y;
+             
+if(hitBox == true){
+                //The startpoint sprite hit the player
+                shipSprite.x = canvas.width/2
+                shipSprite.y = canvas.height/2 + 100;
+
+
+                shipSprite.moveX = 0;
+                shipSprite.movey = 0;
+                score = 0;
+             }
+
 if(a == true){
-    shipSprite.x -= 1
-};
+    // shipSprite.x -= 1
+    shipSprite.moveX -= acceleration
+    
+}
 
 if(d == true){
-    shipSprite.x += 1
-};
+    // shipSprite.x += 1
+    shipSprite.moveX += acceleration
+    
+}
 if(w == true){
-    shipSprite.y -= 1
-};
+    // shipSprite.y -= 1
+    shipSprite.moveY -= acceleration
+}
 
 if(s == true){
-    shipSprite.y += 1
-};
+    // shipSprite.y += 1
+    shipSprite.moveY += acceleration
+}
 //If ship is off the side of screen make it come out the other side
 if(shipSprite.x > canvas.width + 25){
     shipSprite.x = -25;
-};
+}
 if(shipSprite.x < -25){
     shipSprite.x = canvas.width + 25;
 
-};
+}
 if(shipSprite.y > canvas.height + 25){
     shipSprite.y = -25;
-};
+}
 if(shipSprite.y < -25){
     shipSprite.y = canvas.height + 25;
 
-};
+}
 
 if(startPoint.y > canvas.height - 25 || startPoint.y < 0){
     // startPoint.y = -25;
     moveDirection.y *= -1;
     boxColor = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
-};
+}
 
 if(startPoint.x > canvas.width - 25 || startPoint.x < 0){
     // startPoint.x = -25;
     moveDirection.x *= -1;
     boxColor = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
-};
+}
+
+//Multiply by friction
+shipSprite.moveX *= friction;
+shipSprite.moveY *= friction;
+
+//Update the x and y postion values
+shipSprite.x += shipSprite.moveX;
+shipSprite.y += shipSprite.moveY;
 //Draws background
 ctx.fillStyle = "black";
 ctx.fillRect(0,0,canvas.width,canvas.height);
 //Draws stars
 for(var i = 0; i < stars.length; i ++){
-    //draw all the stars
+    //Collid with stars
+    if(shipToStarCollision(stars[i])){
+        shipSprite.x = canvas.width/2
+        shipSprite.y = canvas.height/2 + 100;
+
+        shipSprite.moveX = 0;
+        shipSprite.moveY = 0;
+        score = 0;
+
+    }
+
+        if(hitBox == true){
+            shipSprite.x = canvas.width/2
+                shipSprite.y = canvas.height/2 + 100;
+
+
+                shipSprite.moveX = 0;
+                shipSprite.movey = 0;
+                score = 0;
+                return;
+        }
     stars[i].drawCircle();
     stars[i].y++;
     if(stars[i].y > canvas.height + stars[i].radius * 2){
         stars[i].x = Math.random() * canvas.width;
         stars[i].y = -(Math.random() * canvas.height);
+        score += 10;
           
     }
 }
@@ -163,4 +219,21 @@ for(var i = 0; i < stars.length; i ++){
 ctx.fillStyle = boxColor;
 ctx.fillRect(startPoint.x, startPoint.y, 25,25);
 ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25,25);
+
+
+//Draw our hud element
+ctx.fillStyle = "purple";
+ctx.font = "30px Arial";
+ctx.fillText(`Score: ${score}`, 30, 80);
 };
+
+function shipToStarCollision(star){
+    var closestX = Math.max(shipSprite.x, Math.min(star.x, shipSprite.x + 25));
+    var closestY = Math.max(shipSprite.y, Math.min(star.y, shipSprite.y + 25));
+
+    var dx = star.x - closestX;
+    var dy = star.y - closestY;
+
+    var dist = dx * dx + dy * dy;
+    return dist <= star.radius * star.radius
+}
