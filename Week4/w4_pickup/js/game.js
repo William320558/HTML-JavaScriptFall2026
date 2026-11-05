@@ -13,7 +13,7 @@ var timer = setInterval(main, fps)
 /*-------------INSTRUCTION--------------
 Create variable calledd score to store amount of "pickups" collected
 ---------------------------------------*/
-
+var score = 0;
 /*--------------avatar------------
 avatar is the "player controllable" Object
 -----------------------------------*/
@@ -105,7 +105,7 @@ function main()
         /*----------INSTRUCTION------------
         increase the score by one
         -----------------------------------*/
-        //  text +1 Not working
+        score += 1
     }
 
     for(var i=0; i<pickups.length; i++)
@@ -120,7 +120,7 @@ function main()
         /*----------INSTRUCTION------------
         increase the score by one
         -----------------------------------*/
-        //  text +1 Not working
+        score += 1
     }
     pickups[i].render();
     }
@@ -132,7 +132,7 @@ function main()
    //makes the text center aligned instead of left aligned
    ctx.textAlign = `center`;
    ctx.font = "64px Arial";
-   ctx.fillText("0", 25, 50);
+   ctx.fillText(`Score: ${score}`, 130, 70);
    
 
     /*----------INSTRUCTION------------
