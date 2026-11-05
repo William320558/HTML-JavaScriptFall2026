@@ -106,7 +106,8 @@ function main()
         /*----------INSTRUCTION------------
         increase the score by one
         -----------------------------------*/
-       score += 1
+        score += 1
+
     }
 
     for(var i=0; i<pickups.length; i++)
