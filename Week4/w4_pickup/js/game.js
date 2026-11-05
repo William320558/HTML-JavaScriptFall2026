@@ -140,7 +140,7 @@ function main()
     Set the context's font property to use 64px Arial 
     Draw the score on the canvas using the fillText() method
     HINT: You will have to research how this works 
-    W3schools.com and your book can help
+    W3schools.com and your book can help.
     -----------------------------------*/
 }
 
