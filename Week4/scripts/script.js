@@ -24,6 +24,11 @@ var acceleration = 0.3;
 var friction = 0.9;
 
 var score = 0;
+var starsShot = 0;
+
+// The other cavaliers 
+var shootingSound = new Audio("audio/button-4.mp3");
+var boxReturnCooldown = 0;
 
 
 function createStar(){
@@ -207,8 +212,11 @@ if(space && shootCooldown === 0){
         speed:8,
         color:"white"
     });
-    shootCooldown = 10 ;
+    shootCooldown = 10;
+    shootingSound.currentTime = 0;
+    shootingSound.play();
 }
+
 //Draws background
 ctx.fillStyle = "black";
 ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -227,20 +235,20 @@ for(var i = 0; i < stars.length; i ++){
 
         if(hitBox == true){
             shipSprite.x = canvas.width/2
-                shipSprite.y = canvas.height/2 + 100;
+            shipSprite.y = canvas.height/2 + 100;
 
 
-                shipSprite.moveX = 0;
-                shipSprite.movey = 0;
-                score = 0;
-                return;
+            shipSprite.moveX = 0;
+            shipSprite.movey = 0;
+            score = 0;
+            return;
         }
     stars[i].drawCircle();
     stars[i].y++;
     if(stars[i].y > canvas.height + stars[i].radius * 2){
         stars[i].x = Math.random() * canvas.width;
         stars[i].y = -(Math.random() * canvas.height);
-        score += 10;
+        // score += 10;
           
     }
 }
@@ -260,19 +268,34 @@ for(var i = bullets.length -1; i>= 0; i--){
            bullet.x + bullet.width > startPoint.x &&
            bullet.y < startPoint.y + 25 && 
            bullet.y + bullet.height > startPoint.y;
+    // Box Hit Box
+    if(boxReturnCooldown > 0){
+       boxReturnCooldown--;
+}
 
     if(hitBox){
         bullets.splice(i,1);
         startPoint.x = 100000;
         moveDirection.y = 0;
+        score += 10;
+        boxReturnCooldown = 20;
         continue;
     }
+     // Ultra instinct sum how + sometimes super mario star
+    if(boxReturnCooldown = 1){
+       startPoint.x = 100;
+        moveDirection.y = -1;
+}
+
+
 
     for(var j = 0; j < stars.length; j ++){
         if(shipToStarCollision(bullet, stars[j])){
             bullets.splice(i,1);
             stars[j].x = Math.random() * canvas.width;
-            stars[j].y = -(Math.random() * canvas.height); 
+            stars[j].y = -(Math.random() * canvas.height);
+            score += 10;
+            starsShot =+ 1;
             continue;
         }
     }
@@ -290,7 +313,12 @@ ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25,25);
 //Draw our hud element
 ctx.fillStyle = "purple";
 ctx.font = "30px Arial";
-ctx.fillText(`Score: ${score}`, 30, 80);
+ctx.fillText(`Score: ${score}`, 10, 50);
+;
+
+ctx.fillStyle = "purple";
+ctx.font = "30px Arial";
+ctx.fillText(`StarsShot: ${starsShot}`, 625, 50);
 };
 
 function shipToStarCollision(obj,star){
