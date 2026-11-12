@@ -1,0 +1,408 @@
+
+
+//shift + alt + downArrow to copy line down
+// lamda function --> ()={}
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+var fps = 1000 / 50;
+var timer = setInterval(game, fps);
+
+var startPoint = { x: canvas.width / 2, y: canvas.height / 2 };//canvas.width/2;
+var moveDirection = { x: 1, y: 1 };
+
+
+var boxColor = "green";
+var shipSprite = { image: document.getElementById("ship"), x: 1, y: 1, moveX: 0, moveY: 0 };
+
+var acceleration = 0.3;
+var friction = 0.9;
+
+var score = 0;
+var starsShot = 0;
+
+var states = ["title", "game"];
+states = "title";
+
+
+// The other cavaliers 
+var shootingSound = new Audio("audio/button-4.mp3");
+var boxReturnCooldown = 0;
+
+
+function createStar() {
+    var star = {
+        x: 0,
+        y: 0,
+        radius: 0,
+        color: "black",
+        drawCircle: function () {
+            ctx.beginPath()
+            ctx.fillStyle = this.color
+            ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    };
+    return star;
+}
+
+
+
+var starCount = 35;
+var stars = [];//Creates an arry
+for (var i = 0; i < starCount; i++) {
+    stars[i] = createStar();
+    stars[i].x = Math.random() * canvas.width;
+    stars[i].y = Math.random() * canvas.height;
+    stars[i].radius = Math.random() * 5;
+    stars[i].color = `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`
+
+
+}
+
+shipSprite.x = canvas.width / 2;
+shipSprite.y = canvas.height / 2 + 100;
+
+var a = false;
+var d = false;
+var w = false;
+var s = false;
+var space = false;
+var enter = false;
+
+//Add a varible for the bullets
+var bullets = [];
+var shootCooldown = 0;
+
+
+var startCooldown = 10;
+
+// On key press
+document.addEventListener("keydown", function (e) {
+    console.log(e.key);
+    if (e.key == "a") {
+        a = true;
+    }
+    if (e.key == "d") {
+        d = true;
+    }
+    if (e.key == "w") {
+        w = true;
+    }
+    if (e.key == "s") {
+        s = true;
+    }
+    if (e.code === "Space") {
+        space = true;
+        e.preventDefault();
+    }
+    if(e.key === "Enter"){
+        enter = true;
+    }
+});
+// On key realse
+document.addEventListener("keyup", function (e) {
+    console.log(e.key);
+    console.log(e.key);
+    if (e.key == "a") {
+        a = false;
+    }
+    if (e.key == "d") {
+        d = false;
+    }
+    if (e.key == "w") {
+        w = false;
+    }
+    if (e.key == "s") {
+        s = false;
+    }
+    if (e.code === "Space") {
+        space = false;
+    }
+    if(e.key === "Enter"){
+        enter = false;
+    }
+
+   
+});
+
+//Event for button click
+canvas.addEventListener("click", function(e){
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = (e.clientX - rect.left) * canvas.width/ rect.width;
+    const mouseY = (e.clientY - rect.top) * canvas.height/ rect.height;
+
+    if(states != "game" && 
+        mouseX >= canvas.width/2 - 100 &&
+        mouseX <= canvas.width/2 + 100 &&
+        mouseY >= canvas.height/2 + 100 &&
+        mouseY <= canvas.height/2 + 180 
+    ){
+        startCooldown = 180;
+        switchScenes("game")
+    }
+
+});
+
+
+
+//This is our Game Loop Function
+function game() {
+
+//Clear The Screen
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    switch (states) {
+        case "title":
+               ctx.fillStyle = "black";
+               ctx.font = "50px Arial";
+               let titleText = "Star shooter"
+               ctx.fillText(titleText, canvas.width/2 - (ctx.measureText(titleText).width/2), canvas.height/2 -20);
+               ctx.font = "16px Ariel";
+               let instuctionText = "(press enter to start)";
+               ctx.fillText(instuctionText, canvas.width/2 - (ctx.measureText(instuctionText).width/2),
+               canvas.height/2 + 40);
+
+               //Draws the button
+               ctx.fillStyle = "red";
+               ctx.fillRect(canvas.width/2 - 100, canvas.height/2 + 100, 200, 80);
+               // Draws text on the button
+               ctx.fillStyle = "black";
+               ctx.font = "24px Arial";
+              let buttonText = "Start Game"
+               ctx.fillText(buttonText, canvas.width/2 - (ctx.measureText(buttonText).width/2), canvas.height/2 + 145,)
+
+              
+
+               if(enter){
+                startCooldown = 10;
+                switchScenes("game");
+               }
+
+               
+            break;
+        case "game":
+            if(startCooldown > 0){
+               startCooldown -= 1;
+            }
+            
+
+        
+            //Move the box
+            startPoint.x -= moveDirection.x;
+            startPoint.y += moveDirection.y;
+
+            var hitBox = shipSprite.x < startPoint.x + 25 &&
+                shipSprite.x + 25 > startPoint.x &&
+                shipSprite.y < startPoint.y + 25 &&
+                shipSprite.y + 25 > startPoint.y;
+
+            if (hitBox == true &&  startCooldown <= 0) {
+                //The startpoint sprite hit the player
+                shipSprite.x = canvas.width / 2
+                shipSprite.y = canvas.height / 2 + 100;
+
+
+                shipSprite.moveX = 0;
+                shipSprite.movey = 0;
+                score = 0;
+            }
+
+            if (a == true) {
+                // shipSprite.x -= 1
+                shipSprite.moveX -= acceleration
+
+            }
+
+            if (d == true) {
+                // shipSprite.x += 1
+                shipSprite.moveX += acceleration
+
+            }
+            if (w == true) {
+                // shipSprite.y -= 1
+                shipSprite.moveY -= acceleration
+            }
+
+            if (s == true) {
+                // shipSprite.y += 1
+                shipSprite.moveY += acceleration
+            }
+            //If ship is off the side of screen make it come out the other side
+            if (shipSprite.x > canvas.width + 25) {
+                shipSprite.x = -25;
+            }
+            if (shipSprite.x < -25) {
+                shipSprite.x = canvas.width + 25;
+
+            }
+            if (shipSprite.y > canvas.height + 25) {
+                shipSprite.y = -25;
+            }
+            if (shipSprite.y < -25) {
+                shipSprite.y = canvas.height + 25;
+
+            }
+
+            if (startPoint.y > canvas.height - 25 || startPoint.y < 0) {
+                // startPoint.y = -25;
+                moveDirection.y *= -1;
+                boxColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            }
+
+            if (startPoint.x > canvas.width - 25 || startPoint.x < 0) {
+                // startPoint.x = -25;
+                moveDirection.x *= -1;
+                boxColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            }
+
+            //Multiply by friction
+            shipSprite.moveX *= friction;
+            shipSprite.moveY *= friction;
+
+            //Update the x and y postion values
+            shipSprite.x += shipSprite.moveX;
+            shipSprite.y += shipSprite.moveY;
+
+            //Bullets firing code
+            if (shootCooldown > 0) {
+                shootCooldown--;
+            }
+
+            if (space && shootCooldown === 0) {
+                bullets.push({
+                    x: shipSprite.x + 25 / 2 - 2,
+                    y: shipSprite.y + -10,
+                    width: 4,
+                    height: 10,
+                    speed: 8,
+                    color: "white"
+                });
+                shootCooldown = 10;
+                shootingSound.currentTime = 0;
+                shootingSound.play();
+            }
+
+            //Draws background
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            //Draws stars
+            for (var i = 0; i < stars.length; i++) {
+                //Collid with stars
+                if (shipToStarCollision(shipSprite, stars[i]) && startCooldown <= 0) {
+                    shipSprite.x = canvas.width / 2
+                    shipSprite.y = canvas.height / 2 + 100;
+
+                    shipSprite.moveX = 0;
+                    shipSprite.moveY = 0;
+                    score = 0;
+                    switchScenes("title")
+
+                }
+
+                if (hitBox == true) {
+                    shipSprite.x = canvas.width / 2
+                    shipSprite.y = canvas.height / 2 + 100;
+
+
+                    shipSprite.moveX = 0;
+                    shipSprite.movey = 0;
+                    score = 0;
+                    return;
+                }
+                stars[i].drawCircle();
+                stars[i].y++;
+                if (stars[i].y > canvas.height + stars[i].radius * 2) {
+                    stars[i].x = Math.random() * canvas.width;
+                    stars[i].y = -(Math.random() * canvas.height);
+                    // score += 10;
+
+                }
+            }
+            //Draw and check for bullet collision
+            for (var i = bullets.length - 1; i >= 0; i--) {
+                var bullet = bullets[i];
+
+                bullet.y -= bullet.speed;
+
+                //Check for bullets that leave the screen
+                if (bullet.y + bullet.height < 0) {
+                    bullets.splice(i, 1);
+                    continue;
+                }
+
+                var hitBox = bullet.x < startPoint.x + 25 &&
+                    bullet.x + bullet.width > startPoint.x &&
+                    bullet.y < startPoint.y + 25 &&
+                    bullet.y + bullet.height > startPoint.y;
+                // Box Hit Box
+                if (boxReturnCooldown > 0) {
+                    boxReturnCooldown--;
+                }
+
+                if (hitBox) {
+                    bullets.splice(i, 1);
+                    startPoint.x = 100000;
+                    moveDirection.y = 0;
+                    score += 10;
+                    boxReturnCooldown = 20;
+                    continue;
+                }
+                // Ultra instinct sum how + sometimes super mario star
+                if (boxReturnCooldown = 1) {
+                    startPoint.x = 100;
+                    moveDirection.y = -1;
+                }
+
+
+
+                for (var j = 0; j < stars.length; j++) {
+                    if (shipToStarCollision(bullet, stars[j])) {
+                        bullets.splice(i, 1);
+                        stars[j].x = Math.random() * canvas.width;
+                        stars[j].y = -(Math.random() * canvas.height);
+                        score += 10;
+                        starsShot = + 1;
+                        continue;
+                    }
+                }
+
+                ctx.fillStyle = bullet.color;
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            }
+
+
+            ctx.fillStyle = boxColor;
+            ctx.fillRect(startPoint.x, startPoint.y, 25, 25);
+            ctx.drawImage(shipSprite.image, shipSprite.x, shipSprite.y, 25, 25);
+
+
+            //Draw our hud element
+            ctx.fillStyle = "purple";
+            ctx.font = "30px Arial";
+            ctx.fillText(`Score: ${score}`, 10, 50);
+            ;
+
+            ctx.fillStyle = "purple";
+            ctx.font = "30px Arial";
+            ctx.fillText(`StarsShot: ${starsShot}`, 625, 50);
+            break;
+    }
+
+}
+
+
+function shipToStarCollision(obj, star) {
+    var closestX = Math.max(obj.x, Math.min(star.x, obj.x + 25));
+    var closestY = Math.max(obj.y, Math.min(star.y, obj.y + 25));
+
+    var dx = star.x - closestX;
+    var dy = star.y - closestY;
+
+    var dist = dx * dx + dy * dy;
+    return dist <= star.radius * star.radius
+};
+
+function switchScenes(nameOfScene){
+    states = nameOfScene
+}
